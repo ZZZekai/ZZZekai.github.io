@@ -72,6 +72,173 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CompletingGDD" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/05/26/CompletingGDD/" class="article-date">
+  <time class="dt-published" datetime="2026-05-26T21:17:29.000Z" itemprop="datePublished">2026-05-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/05/26/CompletingGDD/">DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Coding and fixing bugs are only half of game development; the other half is ensuring everyone on the team is rowing in the same direction (literally, in our game’s case). After weeks of high-intensity technical prototyping, our team had an important Sync to officially finalize our Game Design Document (GDD).</p>
+<p>A solid GDD is the backbone of our multiplayer cooperative project, “Ship Happens”[cite: 1]. We clearly distributed the remaining chapters: Felix took charge of the physics mechanics in Section 5.2, Emil handled Sections 5.4 to 5.6 and the entirety of Section 6, and Herman covered the rest of Section 5 and managed Sections 9 through 14[cite: 1].</p>
+<p>My core task for this Sprint was to <strong>draft Sections 4, 5.1, 5.3, 7, and 8</strong>. Below is the core framework I officially established in the document.</p>
+        
+          <p class="article-more-link">
+            <a href="/2026/05/26/CompletingGDD/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/05/26/CompletingGDD/" data-id="cuidkGSdGPXQAtPABwhIbxfHZ" data-title="DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-DynamicUnderwaterRendering" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/05/05/DynamicUnderwaterRendering/" class="article-date">
+  <time class="dt-published" datetime="2026-05-05T20:00:06.000Z" itemprop="datePublished">2026-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/05/05/DynamicUnderwaterRendering/">DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>After sorting out the underlying network logic for multi-adapter broadcasting and blocking out the foundational island terrain, our core focus over the past few days shifted to a critical visual pain point: the <strong>Dynamic Underwater Rendering System</strong>.</p>
+<p>Seamless visual transitions between the surface and underwater are key to enhancing immersion in a marine-themed game. Under the Universal Render Pipeline (URP) and Render Graph API architecture in Unity 6, achieving the ideal visual effect required a hardcore battle, ranging from “mathematical formula synchronization” to “graphics pipeline debugging”.</p>
+<h3 id="🌊-Core-Mechanism-1-Dynamic-Wave-Sync-via-IWaterSurface"><a href="#🌊-Core-Mechanism-1-Dynamic-Wave-Sync-via-IWaterSurface" class="headerlink" title="🌊 Core Mechanism 1: Dynamic Wave Sync via IWaterSurface"></a>🌊 Core Mechanism 1: Dynamic Wave Sync via IWaterSurface</h3><p>The first challenge in underwater rendering is <strong>boundary detection</strong>. If we simply judge whether the camera is underwater based on its absolute height (Y-axis), we get extremely immersion-breaking “instant screen cuts” when the water surface fluctuates due to waves.</p>
+<p>To achieve perfect physical and visual consistency, we introduced the <code>IWaterSurface</code> interface:</p>
+<ul>
+<li><strong>Real-time Wave Height Sampling:</strong> Through this interface, the <code>UnderwaterVisuals</code> controller can obtain the exact dynamic wave height at the camera’s current horizontal coordinates (X, Z) in real-time.</li>
+<li><strong>Logic Gate Calculation:</strong> The underwater state machine is precisely triggered only when the camera’s height falls below the dynamic wave height at its exact position. This ensures that whether the sea is calm or stormy, the moment the camera enters or exits the water, the visual alignment is flawless.</li>
+</ul>
+<h3 id="🎨-Core-Mechanism-2-Depth-Based-Post-processing-Fog"><a href="#🎨-Core-Mechanism-2-Depth-Based-Post-processing-Fog" class="headerlink" title="🎨 Core Mechanism 2: Depth-Based Post-processing Fog"></a>🎨 Core Mechanism 2: Depth-Based Post-processing Fog</h3><p>Once underwater, the entire screen needs to convey the oppressive yet beautiful atmosphere of the deep sea. We built this effect using custom HLSL scripts and URP’s Post-processing Volumes:</p>
+<ol>
+<li><strong>Screen-Space Underwater Fog:</strong> We use the camera’s Depth Texture to calculate the linear depth of every pixel on the screen, which drives the density of the underwater fog. The further an object is from the camera, the deeper the blue tint and the lower the visibility.</li>
+<li><strong>Seamless Post-processing Transition:</strong> When the camera is completely submerged, a dedicated underwater Profile is dynamically enabled. This integrates tweaked global fog, Color Grading, and custom Bloom effects to create the gorgeous, scattered light ripples of sunlight piercing through the water’s surface.</li>
+</ol>
+<hr>
+<h3 id="🚨-The-Final-Boss-Missing-Effects-and-Shader-Variant-Stripping"><a href="#🚨-The-Final-Boss-Missing-Effects-and-Shader-Variant-Stripping" class="headerlink" title="🚨 The Final Boss: Missing Effects and Shader Variant Stripping"></a>🚨 The Final Boss: Missing Effects and Shader Variant Stripping</h3><p>When testing in the Unity Editor, the entire underwater effect was absolutely perfect, with light and shadows rippling beautifully. However, when we built the project and sent it out for cross-platform multiplayer testing, something bizarre happened: <strong>Once the game was built, the underwater effects went completely blind. The entire seabed was a stark white, with no fog or color shifts whatsoever.</strong></p>
+<p>Since there are no error logs in a built game for this kind of issue, we had to trace back step-by-step through the graphics pipeline’s build process. We eventually pinpointed an extremely sneaky underlying optimization mechanism: <strong>Shader Variant Stripping</strong>.</p>
+<p><strong>Root Cause Analysis:</strong><br>To optimize build size and reduce runtime GPU memory usage, Unity 6 employs highly aggressive shader optimization during the build process. Because our underwater shader variants and specific post-processing Keywords are dynamically enabled via scripts at runtime based on dynamic wave data (<code>IWaterSurface</code>), Unity mistakenly assumed during the static scene compilation that these custom fog effects and rendering variants “were never directly referenced by any material in the scene.” Thus, it “smartly” <strong>stripped and discarded</strong> these variants entirely!</p>
+<p><strong>The Solution:</strong><br>Once the root cause was identified, prescribing the fix was straightforward. To stop Unity’s overzealous optimization, we implemented a two-step defense:</p>
+<ol>
+<li><strong>Forced Keyword Retention:</strong> In the URP Shader settings, we elevated the crucial underwater rendering feature keywords to “globally forced,” explicitly telling the compiler that these variants cannot be stripped.</li>
+<li><strong>Always Included List:</strong> We manually added the core post-processing and underwater HLSL shaders into the <code>Graphics Settings -&gt; Always Included Shaders</code> list. This ensures they are fully compiled and included during multi-platform builds.</li>
+</ol>
+<h3 id="🚀-Summary-and-Next-Steps"><a href="#🚀-Summary-and-Next-Steps" class="headerlink" title="🚀 Summary and Next Steps"></a>🚀 Summary and Next Steps</h3><p>This debugging experience profoundly taught me that “Editor performance does not equal Build performance.” Battling the compiler’s optimization strategies deep within the graphics pipeline was painful, but seeing the built version perfectly render the deep, dynamic underwater visuals brought an unparalleled sense of accomplishment.</p>
+<p>At this point, our project boasts a <strong>robust network lobby</strong>, <strong>interference-resistant directed broadcasting</strong>, <strong>complete level terrain</strong>, and a <strong>high-performance underwater visual system</strong>. In the next DevLog, we will focus on the multiplayer synchronization of our core gameplay mechanics (Sailing &amp; Interacting).</p>
+<p>The ocean stage is perfectly set; it’s time to let our ships truly sail!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/05/05/DynamicUnderwaterRendering/" data-id="cuid4777y15kD426ZRQuHN1dq" data-title="DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-BuildingIslands" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/04/26/BuildingIslands/" class="article-date">
+  <time class="dt-published" datetime="2026-04-26T21:01:58.000Z" itemprop="datePublished">2026-04-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/04/26/BuildingIslands/">DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>If the past few weeks of wrestling with UDP network broadcasts and UI state machines were about laying the foundation, the work over these past few days has been about actually “building the house” on top of it.</p>
+<p>With the network multiplayer and the pause menu (featuring the network diagnostic panel) running smoothly, our project has finally crossed the deep waters of underlying technology and officially entered the level blockout&#x2F;prototyping phase. Today’s log is about the birth of the basic foundation of our game world—the islands and the seabed.</p>
+<h3 id="🏝️-Charting-the-Course-Starting-and-Destination-Islands"><a href="#🏝️-Charting-the-Course-Starting-and-Destination-Islands" class="headerlink" title="🏝️ Charting the Course: Starting and Destination Islands"></a>🏝️ Charting the Course: Starting and Destination Islands</h3><p>Our core gameplay loop unfolds across different islands. To quickly validate the gameplay, my primary goal for this phase was to construct two key landmarks: the <strong>Starting Island</strong> and the <strong>Destination Island</strong>.</p>
+<p>As a student team, modeling everything from scratch is obviously unrealistic and would severely slow down our progress. Therefore, I adopted a common rapid prototyping strategy used in the industry: <strong>clever use of free prefabs</strong>.</p>
+<p>By hunting down high-quality free environment assets (rocks, vegetation, terrain materials, etc.) from the Unity Asset Store and open-source communities, I was able to snap together the outlines of two distinctly styled islands like Lego blocks.</p>
+<ul>
+<li><strong>Starting Island:</strong> Primarily serves as the spawn point, tutorial area, and initial resource gathering zone. The terrain is relatively flat, visually providing the player with a sense of safety.</li>
+<li><strong>Destination Island:</strong> Acting as the milestone for the voyage, its terrain design is more complex. Viewed from the open ocean, it needs strong visual guidance (such as taller peaks or a unique silhouette).</li>
+</ul>
+<h3 id="🌊-Bridging-the-Gap-Sculpting-the-Seabed"><a href="#🌊-Bridging-the-Gap-Sculpting-the-Seabed" class="headerlink" title="🌊 Bridging the Gap: Sculpting the Seabed"></a>🌊 Bridging the Gap: Sculpting the Seabed</h3><p>The two islands don’t exist in isolation; they are connected by a vast ocean. To ensure the voyage isn’t monotonous, I also built the <strong>Seabed</strong> topography connecting the two landmasses.</p>
+<p>Using Unity’s Terrain tools combined with prefabs of underwater rocks and coral, I sculpted an undulating underwater landscape. </p>
+<p><strong>Here, a previous technical achievement really shined:</strong><br>The <strong>URP dynamic underwater visual effects (global fog and depth testing)</strong> that I spent so much effort on earlier had their highlight moment here! When the scene was assembled and the camera dove underwater, the rough edges of the model seams were perfectly softened by the underwater fog. Sunlight refracted through the water surface onto the uneven seabed, instantly maximizing the scene’s immersion. At that moment, I truly felt like the world had come alive.</p>
+<h3 id="🚀-Phase-Summary-and-Next-Steps"><a href="#🚀-Phase-Summary-and-Next-Steps" class="headerlink" title="🚀 Phase Summary and Next Steps"></a>🚀 Phase Summary and Next Steps</h3><p>Using free prefabs for white-boxing&#x2F;prototyping has immensely optimized my workflow. It allowed me to focus my precious energy on the “Level Flow” and a sense of spatial scale, rather than getting bogged down tweaking the normal map of a single rock.</p>
+<p>Currently, the basic scene structure of the game is established. The two islands and the seabed not only provide physical space for the upcoming sailing gameplay but also serve as an excellent testing playground for our cross-platform LAN multiplayer.</p>
+<p>In the next Sprint, we will drop the finalized Player Controller into this scene to conduct real movement and multiplayer interaction tests. The stage for our voyage is set—it’s time to set sail!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/04/26/BuildingIslands/" data-id="cuidcQCewFd0UV3W3uTsigQZD" data-title="DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-AddingPauseMenu" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/04/08/AddingPauseMenu/" class="article-date">
@@ -101,7 +268,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/08/AddingPauseMenu/" data-id="cuidJ4HWjhQ6624meaQCq80iM" data-title="AddingPauseMenu" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/08/AddingPauseMenu/" data-id="cuidUL8ymosBfUB7W43pUgph1" data-title="AddingPauseMenu" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -169,7 +336,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/03/31/CreateGithubPage/" data-id="cuidN_de8xTJh1jI8pPliYhKS" data-title="CreateGithubPage &amp; Core Multiplayer Architecture" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/03/31/CreateGithubPage/" data-id="cuid3sjZLgOtFdCwSj0a8VVxg" data-title="CreateGithubPage &amp; Core Multiplayer Architecture" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -219,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/03/25/Using-ParrelSync-to-simulate-multiple-players/" data-id="cuid_M66dZxOGp3TqBMrNQ5CN" data-title="Using ParrelSync to Simulate Multiple Players &amp; FPS Setup" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/03/25/Using-ParrelSync-to-simulate-multiple-players/" data-id="cuidajd4ylnAwsi0KJeVbuil_" data-title="Using ParrelSync to Simulate Multiple Players &amp; FPS Setup" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -259,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/03/25/2026-3-25/" data-id="cuidBOU7pLoJpLsVPr67rGqGL" data-title="Hello World, I&#39;m ready!" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/03/25/2026-3-25/" data-id="cuidv_reYvJMZHWHHWT_-dQaD" data-title="Hello World, I&#39;m ready!" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -305,7 +472,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/04/">April 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/05/">May 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/04/">April 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
     </div>
   </div>
 
@@ -318,19 +485,23 @@
       <ul>
         
           <li>
+            <a href="/2026/05/26/CompletingGDD/">DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD</a>
+          </li>
+        
+          <li>
+            <a href="/2026/05/05/DynamicUnderwaterRendering/">DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping</a>
+          </li>
+        
+          <li>
+            <a href="/2026/04/26/BuildingIslands/">DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs</a>
+          </li>
+        
+          <li>
             <a href="/2026/04/08/AddingPauseMenu/">AddingPauseMenu</a>
           </li>
         
           <li>
             <a href="/2026/03/31/CreateGithubPage/">CreateGithubPage &amp; Core Multiplayer Architecture</a>
-          </li>
-        
-          <li>
-            <a href="/2026/03/25/Using-ParrelSync-to-simulate-multiple-players/">Using ParrelSync to Simulate Multiple Players &amp; FPS Setup</a>
-          </li>
-        
-          <li>
-            <a href="/2026/03/25/2026-3-25/">Hello World, I&#39;m ready!</a>
           </li>
         
       </ul>

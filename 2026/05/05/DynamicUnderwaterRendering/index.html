@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping | Zekai&#39;s dev blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="After sorting out the underlying network logic for multi-adapter broadcasting and blocking out the foundational island terrain, our core focus over the past few days shifted to a critical visual pain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping">
+<meta property="og:url" content="http://example.com/2026/05/05/DynamicUnderwaterRendering/index.html">
+<meta property="og:site_name" content="Zekai&#39;s dev blog">
+<meta property="og:description" content="After sorting out the underlying network logic for multi-adapter broadcasting and blocking out the foundational island terrain, our core focus over the past few days shifted to a critical visual pain">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-05-05T20:00:06.000Z">
+<meta property="article:modified_time" content="2026-05-26T21:11:55.748Z">
+<meta property="article:author" content="Zekai Lin">
+<meta property="article:tag" content="Computer Game Design">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Zekai's dev blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Zekai&#39;s dev blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-DynamicUnderwaterRendering" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/05/05/DynamicUnderwaterRendering/" class="article-date">
+  <time class="dt-published" datetime="2026-05-05T20:00:06.000Z" itemprop="datePublished">2026-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>After sorting out the underlying network logic for multi-adapter broadcasting and blocking out the foundational island terrain, our core focus over the past few days shifted to a critical visual pain point: the <strong>Dynamic Underwater Rendering System</strong>.</p>
+<p>Seamless visual transitions between the surface and underwater are key to enhancing immersion in a marine-themed game. Under the Universal Render Pipeline (URP) and Render Graph API architecture in Unity 6, achieving the ideal visual effect required a hardcore battle, ranging from “mathematical formula synchronization” to “graphics pipeline debugging”.</p>
+<h3 id="🌊-Core-Mechanism-1-Dynamic-Wave-Sync-via-IWaterSurface"><a href="#🌊-Core-Mechanism-1-Dynamic-Wave-Sync-via-IWaterSurface" class="headerlink" title="🌊 Core Mechanism 1: Dynamic Wave Sync via IWaterSurface"></a>🌊 Core Mechanism 1: Dynamic Wave Sync via IWaterSurface</h3><p>The first challenge in underwater rendering is <strong>boundary detection</strong>. If we simply judge whether the camera is underwater based on its absolute height (Y-axis), we get extremely immersion-breaking “instant screen cuts” when the water surface fluctuates due to waves.</p>
+<p>To achieve perfect physical and visual consistency, we introduced the <code>IWaterSurface</code> interface:</p>
+<ul>
+<li><strong>Real-time Wave Height Sampling:</strong> Through this interface, the <code>UnderwaterVisuals</code> controller can obtain the exact dynamic wave height at the camera’s current horizontal coordinates (X, Z) in real-time.</li>
+<li><strong>Logic Gate Calculation:</strong> The underwater state machine is precisely triggered only when the camera’s height falls below the dynamic wave height at its exact position. This ensures that whether the sea is calm or stormy, the moment the camera enters or exits the water, the visual alignment is flawless.</li>
+</ul>
+<h3 id="🎨-Core-Mechanism-2-Depth-Based-Post-processing-Fog"><a href="#🎨-Core-Mechanism-2-Depth-Based-Post-processing-Fog" class="headerlink" title="🎨 Core Mechanism 2: Depth-Based Post-processing Fog"></a>🎨 Core Mechanism 2: Depth-Based Post-processing Fog</h3><p>Once underwater, the entire screen needs to convey the oppressive yet beautiful atmosphere of the deep sea. We built this effect using custom HLSL scripts and URP’s Post-processing Volumes:</p>
+<ol>
+<li><strong>Screen-Space Underwater Fog:</strong> We use the camera’s Depth Texture to calculate the linear depth of every pixel on the screen, which drives the density of the underwater fog. The further an object is from the camera, the deeper the blue tint and the lower the visibility.</li>
+<li><strong>Seamless Post-processing Transition:</strong> When the camera is completely submerged, a dedicated underwater Profile is dynamically enabled. This integrates tweaked global fog, Color Grading, and custom Bloom effects to create the gorgeous, scattered light ripples of sunlight piercing through the water’s surface.</li>
+</ol>
+<hr>
+<h3 id="🚨-The-Final-Boss-Missing-Effects-and-Shader-Variant-Stripping"><a href="#🚨-The-Final-Boss-Missing-Effects-and-Shader-Variant-Stripping" class="headerlink" title="🚨 The Final Boss: Missing Effects and Shader Variant Stripping"></a>🚨 The Final Boss: Missing Effects and Shader Variant Stripping</h3><p>When testing in the Unity Editor, the entire underwater effect was absolutely perfect, with light and shadows rippling beautifully. However, when we built the project and sent it out for cross-platform multiplayer testing, something bizarre happened: <strong>Once the game was built, the underwater effects went completely blind. The entire seabed was a stark white, with no fog or color shifts whatsoever.</strong></p>
+<p>Since there are no error logs in a built game for this kind of issue, we had to trace back step-by-step through the graphics pipeline’s build process. We eventually pinpointed an extremely sneaky underlying optimization mechanism: <strong>Shader Variant Stripping</strong>.</p>
+<p><strong>Root Cause Analysis:</strong><br>To optimize build size and reduce runtime GPU memory usage, Unity 6 employs highly aggressive shader optimization during the build process. Because our underwater shader variants and specific post-processing Keywords are dynamically enabled via scripts at runtime based on dynamic wave data (<code>IWaterSurface</code>), Unity mistakenly assumed during the static scene compilation that these custom fog effects and rendering variants “were never directly referenced by any material in the scene.” Thus, it “smartly” <strong>stripped and discarded</strong> these variants entirely!</p>
+<p><strong>The Solution:</strong><br>Once the root cause was identified, prescribing the fix was straightforward. To stop Unity’s overzealous optimization, we implemented a two-step defense:</p>
+<ol>
+<li><strong>Forced Keyword Retention:</strong> In the URP Shader settings, we elevated the crucial underwater rendering feature keywords to “globally forced,” explicitly telling the compiler that these variants cannot be stripped.</li>
+<li><strong>Always Included List:</strong> We manually added the core post-processing and underwater HLSL shaders into the <code>Graphics Settings -&gt; Always Included Shaders</code> list. This ensures they are fully compiled and included during multi-platform builds.</li>
+</ol>
+<h3 id="🚀-Summary-and-Next-Steps"><a href="#🚀-Summary-and-Next-Steps" class="headerlink" title="🚀 Summary and Next Steps"></a>🚀 Summary and Next Steps</h3><p>This debugging experience profoundly taught me that “Editor performance does not equal Build performance.” Battling the compiler’s optimization strategies deep within the graphics pipeline was painful, but seeing the built version perfectly render the deep, dynamic underwater visuals brought an unparalleled sense of accomplishment.</p>
+<p>At this point, our project boasts a <strong>robust network lobby</strong>, <strong>interference-resistant directed broadcasting</strong>, <strong>complete level terrain</strong>, and a <strong>high-performance underwater visual system</strong>. In the next DevLog, we will focus on the multiplayer synchronization of our core gameplay mechanics (Sailing &amp; Interacting).</p>
+<p>The ocean stage is perfectly set; it’s time to let our ships truly sail!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/05/05/DynamicUnderwaterRendering/" data-id="cuid4777y15kD426ZRQuHN1dq" data-title="DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/05/26/CompletingGDD/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/04/26/BuildingIslands/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Starter/" rel="tag">Starter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Computer-Game-Design/" style="font-size: 20px;">Computer Game Design</a> <a href="/tags/Starter/" style="font-size: 10px;">Starter</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/05/">May 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/04/">April 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/05/26/CompletingGDD/">DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD</a>
+          </li>
+        
+          <li>
+            <a href="/2026/05/05/DynamicUnderwaterRendering/">DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping</a>
+          </li>
+        
+          <li>
+            <a href="/2026/04/26/BuildingIslands/">DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs</a>
+          </li>
+        
+          <li>
+            <a href="/2026/04/08/AddingPauseMenu/">AddingPauseMenu</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/CreateGithubPage/">CreateGithubPage &amp; Core Multiplayer Architecture</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 Zekai Lin<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

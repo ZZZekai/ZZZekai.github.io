@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs | Zekai&#39;s dev blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="If the past few weeks of wrestling with UDP network broadcasts and UI state machines were about laying the foundation, the work over these past few days has been about actually “building the house” on">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs">
+<meta property="og:url" content="http://example.com/2026/04/26/BuildingIslands/index.html">
+<meta property="og:site_name" content="Zekai&#39;s dev blog">
+<meta property="og:description" content="If the past few weeks of wrestling with UDP network broadcasts and UI state machines were about laying the foundation, the work over these past few days has been about actually “building the house” on">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-04-26T21:01:58.000Z">
+<meta property="article:modified_time" content="2026-05-26T21:05:19.577Z">
+<meta property="article:author" content="Zekai Lin">
+<meta property="article:tag" content="Computer Game Design">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Zekai's dev blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Zekai&#39;s dev blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-BuildingIslands" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/04/26/BuildingIslands/" class="article-date">
+  <time class="dt-published" datetime="2026-04-26T21:01:58.000Z" itemprop="datePublished">2026-04-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>If the past few weeks of wrestling with UDP network broadcasts and UI state machines were about laying the foundation, the work over these past few days has been about actually “building the house” on top of it.</p>
+<p>With the network multiplayer and the pause menu (featuring the network diagnostic panel) running smoothly, our project has finally crossed the deep waters of underlying technology and officially entered the level blockout&#x2F;prototyping phase. Today’s log is about the birth of the basic foundation of our game world—the islands and the seabed.</p>
+<h3 id="🏝️-Charting-the-Course-Starting-and-Destination-Islands"><a href="#🏝️-Charting-the-Course-Starting-and-Destination-Islands" class="headerlink" title="🏝️ Charting the Course: Starting and Destination Islands"></a>🏝️ Charting the Course: Starting and Destination Islands</h3><p>Our core gameplay loop unfolds across different islands. To quickly validate the gameplay, my primary goal for this phase was to construct two key landmarks: the <strong>Starting Island</strong> and the <strong>Destination Island</strong>.</p>
+<p>As a student team, modeling everything from scratch is obviously unrealistic and would severely slow down our progress. Therefore, I adopted a common rapid prototyping strategy used in the industry: <strong>clever use of free prefabs</strong>.</p>
+<p>By hunting down high-quality free environment assets (rocks, vegetation, terrain materials, etc.) from the Unity Asset Store and open-source communities, I was able to snap together the outlines of two distinctly styled islands like Lego blocks.</p>
+<ul>
+<li><strong>Starting Island:</strong> Primarily serves as the spawn point, tutorial area, and initial resource gathering zone. The terrain is relatively flat, visually providing the player with a sense of safety.</li>
+<li><strong>Destination Island:</strong> Acting as the milestone for the voyage, its terrain design is more complex. Viewed from the open ocean, it needs strong visual guidance (such as taller peaks or a unique silhouette).</li>
+</ul>
+<h3 id="🌊-Bridging-the-Gap-Sculpting-the-Seabed"><a href="#🌊-Bridging-the-Gap-Sculpting-the-Seabed" class="headerlink" title="🌊 Bridging the Gap: Sculpting the Seabed"></a>🌊 Bridging the Gap: Sculpting the Seabed</h3><p>The two islands don’t exist in isolation; they are connected by a vast ocean. To ensure the voyage isn’t monotonous, I also built the <strong>Seabed</strong> topography connecting the two landmasses.</p>
+<p>Using Unity’s Terrain tools combined with prefabs of underwater rocks and coral, I sculpted an undulating underwater landscape. </p>
+<p><strong>Here, a previous technical achievement really shined:</strong><br>The <strong>URP dynamic underwater visual effects (global fog and depth testing)</strong> that I spent so much effort on earlier had their highlight moment here! When the scene was assembled and the camera dove underwater, the rough edges of the model seams were perfectly softened by the underwater fog. Sunlight refracted through the water surface onto the uneven seabed, instantly maximizing the scene’s immersion. At that moment, I truly felt like the world had come alive.</p>
+<h3 id="🚀-Phase-Summary-and-Next-Steps"><a href="#🚀-Phase-Summary-and-Next-Steps" class="headerlink" title="🚀 Phase Summary and Next Steps"></a>🚀 Phase Summary and Next Steps</h3><p>Using free prefabs for white-boxing&#x2F;prototyping has immensely optimized my workflow. It allowed me to focus my precious energy on the “Level Flow” and a sense of spatial scale, rather than getting bogged down tweaking the normal map of a single rock.</p>
+<p>Currently, the basic scene structure of the game is established. The two islands and the seabed not only provide physical space for the upcoming sailing gameplay but also serve as an excellent testing playground for our cross-platform LAN multiplayer.</p>
+<p>In the next Sprint, we will drop the finalized Player Controller into this scene to conduct real movement and multiplayer interaction tests. The stage for our voyage is set—it’s time to set sail!</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/04/26/BuildingIslands/" data-id="cuidcQCewFd0UV3W3uTsigQZD" data-title="DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/05/05/DynamicUnderwaterRendering/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/04/08/AddingPauseMenu/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">AddingPauseMenu</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Computer-Game-Design/" rel="tag">Computer Game Design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Starter/" rel="tag">Starter</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Computer-Game-Design/" style="font-size: 20px;">Computer Game Design</a> <a href="/tags/Starter/" style="font-size: 10px;">Starter</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/05/">May 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/04/">April 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/05/26/CompletingGDD/">DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD</a>
+          </li>
+        
+          <li>
+            <a href="/2026/05/05/DynamicUnderwaterRendering/">DevLog: Dynamic Underwater Rendering in Unity 6 URP – Overcoming Shader Stripping</a>
+          </li>
+        
+          <li>
+            <a href="/2026/04/26/BuildingIslands/">DevLog: Building Islands and Seabeds from Scratch – Prototyping Environments with Free Prefabs</a>
+          </li>
+        
+          <li>
+            <a href="/2026/04/08/AddingPauseMenu/">AddingPauseMenu</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/CreateGithubPage/">CreateGithubPage &amp; Core Multiplayer Architecture</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 Zekai Lin<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
