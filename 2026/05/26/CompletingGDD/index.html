@@ -14,7 +14,7 @@
 <meta property="og:description" content="Coding and fixing bugs are only half of game development; the other half is ensuring everyone on the team is rowing in the same direction (literally, in our game’s case). After weeks of high-intensity">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-05-26T21:17:29.000Z">
-<meta property="article:modified_time" content="2026-05-26T21:22:45.351Z">
+<meta property="article:modified_time" content="2026-05-26T21:26:17.673Z">
 <meta property="article:author" content="Zekai Lin">
 <meta property="article:tag" content="Computer Game Design">
 <meta name="twitter:card" content="summary">
@@ -97,42 +97,42 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>Coding and fixing bugs are only half of game development; the other half is ensuring everyone on the team is rowing in the same direction (literally, in our game’s case). After weeks of high-intensity technical prototyping, our team had an important Sync to officially finalize our Game Design Document (GDD).</p>
-<p>A solid GDD is the backbone of our multiplayer cooperative project, “Ship Happens”[cite: 1]. We clearly distributed the remaining chapters: Felix took charge of the physics mechanics in Section 5.2, Emil handled Sections 5.4 to 5.6 and the entirety of Section 6, and Herman covered the rest of Section 5 and managed Sections 9 through 14[cite: 1].</p>
+<p>A solid GDD is the backbone of our multiplayer cooperative project, “Ship Happens”. We clearly distributed the remaining chapters: Felix took charge of the physics mechanics in Section 5.2, Emil handled Sections 5.4 to 5.6 and the entirety of Section 6, and Herman covered the rest of Section 5 and managed Sections 9 through 14.</p>
 <p>My core task for this Sprint was to <strong>draft Sections 4, 5.1, 5.3, 7, and 8</strong>. Below is the core framework I officially established in the document.</p>
 <span id="more"></span>
 
-<h3 id="🐧-Section-4-Game-Overview"><a href="#🐧-Section-4-Game-Overview" class="headerlink" title="🐧 Section 4: Game Overview"></a>🐧 Section 4: Game Overview</h3><p>In this chapter, I officially defined the core tone of “Ship Happens”: it is a frantic, physics-based co-op party game[cite: 1]. Players take on the roles of clumsy penguins working together to row a wooden boat through a vibrant, low-poly world while executing perilous cargo transport missions[cite: 1].</p>
+<h3 id="🐧-Section-4-Game-Overview"><a href="#🐧-Section-4-Game-Overview" class="headerlink" title="🐧 Section 4: Game Overview"></a>🐧 Section 4: Game Overview</h3><p>In this chapter, I officially defined the core tone of “Ship Happens”: it is a frantic, physics-based co-op party game. Players take on the roles of clumsy penguins working together to row a wooden boat through a vibrant, low-poly world while executing perilous cargo transport missions.</p>
 <p>I detailed the core Feature Set, including:</p>
 <ul>
-<li><strong>Directional Co-op Rowing:</strong> Navigation is entirely manual and physics-driven, and players must synchronize their timing and positioning to steer or propel the boat[cite: 1].</li>
-<li><strong>Vision-Obscuring Cargo Transport:</strong> When transporting oversized cargo, the player’s field of view is completely blocked, requiring them to rely entirely on verbal callouts and directions from teammates to navigate the deck[cite: 1].</li>
-<li><strong>Dynamic Scale System:</strong> Rather than rigid difficulty settings, players dynamically adjust the stakes of each level by paying a variable upfront “buy-in fee” to acquire more or larger cargo, increasing both the chaotic difficulty and the financial payout[cite: 1].</li>
+<li><strong>Directional Co-op Rowing:</strong> Navigation is entirely manual and physics-driven, and players must synchronize their timing and positioning to steer or propel the boat.</li>
+<li><strong>Vision-Obscuring Cargo Transport:</strong> When transporting oversized cargo, the player’s field of view is completely blocked, requiring them to rely entirely on verbal callouts and directions from teammates to navigate the deck.</li>
+<li><strong>Dynamic Scale System:</strong> Rather than rigid difficulty settings, players dynamically adjust the stakes of each level by paying a variable upfront “buy-in fee” to acquire more or larger cargo, increasing both the chaotic difficulty and the financial payout.</li>
 </ul>
 <h3 id="💰-Section-5-1-Gameplay"><a href="#💰-Section-5-1-Gameplay" class="headerlink" title="💰 Section 5.1: Gameplay"></a>💰 Section 5.1: Gameplay</h3><p>In this section, I established the macro and micro Game Loops.</p>
 <ul>
-<li><strong>Economy and Progression:</strong> The progression is driven by a central economic meta-game: paying off a massive debt[cite: 1]. Earning money unlocks progression to harsher environments like the Glacier or Volcanic regions, or allows players to invest in permanent ship upgrades like bigger ships, sails, and motors[cite: 1].</li>
-<li><strong>Chaos-Based Coordination Puzzles:</strong> The game relies heavily on Physics and Coordination Puzzles born from chaos rather than traditional logic puzzles[cite: 1]. Examples include the Asymmetrical Steering Puzzle (relying entirely on the asymmetrical thrust generated by players’ oars to steer) and Crisis Triage (simultaneously prioritizing fighting a crocodile, patching a hull damaged by a shark, and preventing cargo from sliding)[cite: 1].</li>
+<li><strong>Economy and Progression:</strong> The progression is driven by a central economic meta-game: paying off a massive debt. Earning money unlocks progression to harsher environments like the Glacier or Volcanic regions, or allows players to invest in permanent ship upgrades like bigger ships, sails, and motors.</li>
+<li><strong>Chaos-Based Coordination Puzzles:</strong> The game relies heavily on Physics and Coordination Puzzles born from chaos rather than traditional logic puzzles. Examples include the Asymmetrical Steering Puzzle (relying entirely on the asymmetrical thrust generated by players’ oars to steer) and Crisis Triage (simultaneously prioritizing fighting a crocodile, patching a hull damaged by a shark, and preventing cargo from sliding).</li>
 </ul>
-<h3 id="🗺️-Section-5-3-Screen-Flow"><a href="#🗺️-Section-5-3-Screen-Flow" class="headerlink" title="🗺️ Section 5.3: Screen Flow"></a>🗺️ Section 5.3: Screen Flow</h3><p>To embrace the lighthearted party game atmosphere, I broke away from traditional static menu designs.<br>I designed a <strong>Sandbox Hub (Interactive Lobby)</strong>, which is a playable safe zone on an island coast[cite: 1]. Players spawn as penguins and must physically walk into specific zones or talk to NPC vendors to access sub-menus: going to the “Shipyard” to buy upgrades, the “Debt Map” to select the next level, or interacting with the Dispatcher Penguin to purchase cargo[cite: 1].</p>
+<h3 id="🗺️-Section-5-3-Screen-Flow"><a href="#🗺️-Section-5-3-Screen-Flow" class="headerlink" title="🗺️ Section 5.3: Screen Flow"></a>🗺️ Section 5.3: Screen Flow</h3><p>To embrace the lighthearted party game atmosphere, I broke away from traditional static menu designs.<br>I designed a <strong>Sandbox Hub (Interactive Lobby)</strong>, which is a playable safe zone on an island coast. Players spawn as penguins and must physically walk into specific zones or talk to NPC vendors to access sub-menus: going to the “Shipyard” to buy upgrades, the “Debt Map” to select the next level, or interacting with the Dispatcher Penguin to purchase cargo.</p>
 <h3 id="🏝️-Section-7-Levels"><a href="#🏝️-Section-7-Levels" class="headerlink" title="🏝️ Section 7: Levels"></a>🏝️ Section 7: Levels</h3><p>I outlined the blueprints for 4 progressive levels:</p>
 <ol>
-<li><strong>The Sandbox Coast:</strong> A safe testing zone to learn the basic controls, summarizing the core logic as: “Oar in water &#x3D; Row. Oar in air &#x3D; Punch.”[cite: 1].</li>
-<li><strong>Tropical Shallows:</strong> Focuses on introducing dynamic waves and basic enemy interruption, specifically encountering the melee threat of a Crocodile[cite: 1].</li>
-<li><strong>Frostbite Fjord:</strong> Introduces deck modifiers (slippery ice) and hull damage mechanics caused by a Shark, testing players’ blind navigation and emergency repair skills[cite: 1].</li>
-<li><strong>Brimstone Bay:</strong> The ultimate stress-test level featuring extreme wave heights, steep troughs, and simultaneous threats from both a Shark and a Crocodile[cite: 1].</li>
+<li><strong>The Sandbox Coast:</strong> A safe testing zone to learn the basic controls, summarizing the core logic as: “Oar in water &#x3D; Row. Oar in air &#x3D; Punch.”</li>
+<li><strong>Tropical Shallows:</strong> Focuses on introducing dynamic waves and basic enemy interruption, specifically encountering the melee threat of a Crocodile.</li>
+<li><strong>Frostbite Fjord:</strong> Introduces deck modifiers (slippery ice) and hull damage mechanics caused by a Shark, testing players’ blind navigation and emergency repair skills.</li>
+<li><strong>Brimstone Bay:</strong> The ultimate stress-test level featuring extreme wave heights, steep troughs, and simultaneous threats from both a Shark and a Crocodile.</li>
 </ol>
 <h3 id="🎮-Section-8-Interface-Visuals-and-Control"><a href="#🎮-Section-8-Interface-Visuals-and-Control" class="headerlink" title="🎮 Section 8: Interface, Visuals, and Control"></a>🎮 Section 8: Interface, Visuals, and Control</h3><p>In this section, I linked technical implementation with design specifications:</p>
 <ul>
-<li><strong>Visual System:</strong> Established a vibrant, highly saturated low-poly art style developed in Unity using the Universal Render Pipeline (URP), utilizing a custom water shader to handle dynamic wave displacement and buoyancy physics[cite: 1].</li>
-<li><strong>Control System:</strong> Clarified the Keyboard &amp; Mouse mapping, emphasizing that directional steering depends entirely on the physical position of the player on the deck (port or starboard) combined with their oar stroke[cite: 1]. Left Mouse Button (LMB) rows left when the oar is in water, and Right Mouse Button (RMB) rows right[cite: 1].</li>
-<li><strong>Audio and SFX:</strong> Established exaggerated, cartoonish “bonks” and “thuds” for impacts, alongside upbeat, comedic sea shanty music that increases in tempo when the boat is severely damaged[cite: 1]. It also includes distressed penguin squeaks and quacks when taking damage or falling overboard[cite: 1].</li>
+<li><strong>Visual System:</strong> Established a vibrant, highly saturated low-poly art style developed in Unity using the Universal Render Pipeline (URP), utilizing a custom water shader to handle dynamic wave displacement and buoyancy physics.</li>
+<li><strong>Control System:</strong> Clarified the Keyboard &amp; Mouse mapping, emphasizing that directional steering depends entirely on the physical position of the player on the deck (port or starboard) combined with their oar stroke. Left Mouse Button (LMB) rows left when the oar is in water, and Right Mouse Button (RMB) rows right.</li>
+<li><strong>Audio and SFX:</strong> Established exaggerated, cartoonish “bonks” and “thuds” for impacts, alongside upbeat, comedic sea shanty music that increases in tempo when the boat is severely damaged. It also includes distressed penguin squeaks and quacks when taking damage or falling overboard.</li>
 </ul>
 <h3 id="🚀-Conclusion"><a href="#🚀-Conclusion" class="headerlink" title="🚀 Conclusion"></a>🚀 Conclusion</h3><p>Documenting these settings in black and white is not just a refinement of our early brainstorming, but it also gives the team an absolutely clear benchmark for the next few months of development. All documents are now successfully merged. The blueprint is set; penguins, it’s time to get in the water and work!</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/05/26/CompletingGDD/" data-id="cuidCVXlJovF1Kq5T0iITPy5K" data-title="DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/05/26/CompletingGDD/" data-id="cuidzUTThQ1gp4nzazKGG6ioh" data-title="DevLog: Formalizing the Vision – Completing the Core Modules of the &#39;Ship Happens&#39; GDD" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
